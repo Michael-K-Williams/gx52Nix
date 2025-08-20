@@ -155,12 +155,34 @@ The application needs access to X52 USB devices. The flake includes udev rules t
 - X52 (06a3:0255) 
 - X52 Pro MFD (06a3:075c)
 
-If using the NixOS module with `addUdevRules = true`, these rules are automatically installed.
+### Required Setup
 
-For manual installation or other systems, add yourself to the `plugdev` group:
+**IMPORTANT:** Your user must be in the `plugdev` group for USB device access to work.
+
+#### NixOS Configuration
+Add `"plugdev"` to your user's groups in your NixOS configuration:
+
+```nix
+users.users.yourusername = {
+  extraGroups = [ "wheel" "networkmanager" "plugdev" ];
+};
+```
+
+After rebuilding, **log out and log back in** (or reboot) for the group changes to take effect.
+
+#### Manual Setup (Non-NixOS)
 ```bash
 sudo usermod -a -G plugdev $USER
+# Then log out and log back in
 ```
+
+### Verification
+Check that you're in the plugdev group:
+```bash
+groups  # Should include "plugdev"
+```
+
+If using the NixOS module with `addUdevRules = true`, the udev rules are automatically installed.
 
 ## Command Line Options
 
